@@ -137,7 +137,8 @@ SyncSettings =
             notification.dismiss()
       }]
 
-  backup: (cb=null) ->
+
+  getBackupFiles: () ->
     files = {}
     if atom.config.get('sync-settings.syncSettings')
       files["settings.json"] = content: @getFilteredSettings()
@@ -164,6 +165,11 @@ SyncSettings =
       files[file] =
         content: (@fileContent atom.getConfigDirPath() + "/#{file}") ? "#{cmtstart} #{file} (not found) #{cmtend}"
 
+    return files
+
+
+  backup: (cb=null) ->
+    files = @getBackupFiles()
     @createClient().gists.edit
       id: @getGistId()
       description: atom.config.get 'sync-settings.gistDescription'
